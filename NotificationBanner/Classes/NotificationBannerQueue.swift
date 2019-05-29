@@ -103,6 +103,16 @@ open class NotificationBannerQueue: NSObject {
         Removes all notification banners from the queue
     */
     public func removeAll() {
+        var first: BaseNotificationBanner?
+        if !banners.isEmpty {
+            first = banners.removeFirst()
+        }
+        
         banners.removeAll()
+        
+        // run after removeAll() to prevent showNext() inside removeAll()
+        if first?.isDisplaying ?? false {
+            first?.dismiss()
+        }
     }
 }

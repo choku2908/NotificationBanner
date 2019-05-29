@@ -302,10 +302,11 @@ public class BaseNotificationBanner: UIView {
     public func show(queuePosition: QueuePosition = .back,
                      bannerPosition: BannerPosition = .top,
                      queue: NotificationBannerQueue = NotificationBannerQueue.default,
+                     clearQueue: Bool = false,
                      on viewController: UIViewController? = nil) {
         parentViewController = viewController
         bannerQueue = queue
-        show(placeOnQueue: true, queuePosition: queuePosition, bannerPosition: bannerPosition)
+        show(placeOnQueue: true, queuePosition: queuePosition, clearQueue: clearQueue, bannerPosition: bannerPosition)
     }
     
     /**
@@ -317,6 +318,7 @@ public class BaseNotificationBanner: UIView {
     */
     func show(placeOnQueue: Bool,
               queuePosition: QueuePosition = .back,
+              clearQueue: Bool = false,
               bannerPosition: BannerPosition = .top) {
         
         guard !isDisplaying else {
@@ -340,6 +342,10 @@ public class BaseNotificationBanner: UIView {
                                                selector: #selector(onOrientationChanged),
                                                name: UIDevice.orientationDidChangeNotification,
                                                object: nil)
+        
+        if clearQueue {
+            bannerQueue.removeAll()
+        }
         
         if placeOnQueue {
             bannerQueue.addBanner(self, queuePosition: queuePosition)
